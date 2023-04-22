@@ -1,16 +1,41 @@
+import Questions from "../models/questionSchema.js";
+import Results from "../models/resultSchema.js";
+import questions, { answers } from '../database/data.js';
+
 // get all questions
 export async function getQuestion(req,res){
-    res.json("Ques API get request");
+    // res.json("Ques API get request");
+    try{
+        const q = await Questions.find();
+        res.json(q);
+    }catch(error){
+        res.json({ error })
+    }
 }
 
 // insert all questions
 export async function insertQuestions(req, res){
-    res.json("questions api post req")
+    try{
+        Questions.insertMany({questions : questions, answers: answers})
+                    .then(function(err, data){
+                        res.json({ msg : "Data inserted successfully...!"});
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+    }catch(error){
+        res.json({ error })
+    }
 }
 
 // delete all questions
 export async function deleteQuestions(req, res){
-    res.json("questions api delete req")
+    try{
+        await Questions.deleteMany();
+        res.json({ msg : "All data deleted...!"});
+    }catch(error){
+        res.json({ error })
+    }
 }
 
 
